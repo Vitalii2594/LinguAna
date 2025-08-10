@@ -14,7 +14,17 @@ export const translations = {
       title: 'Naucz się języków z najlepszymi nauczycielami',
       subtitle: 'Odkryj nasze kursy językowe online i zacznij swoją przygodę z nowymi językami już dziś',
       cta: 'Sprawdź kursy',
-      languages: 'Dostępne języki'
+      languages: 'Dostępne języki',
+      languageNames: {
+        german: 'Niemiecki',
+        spanish: 'Hiszpański', 
+        french: 'Francuski',
+        italian: 'Włoski',
+        english: 'Angielski'
+      },
+      imageAlt: 'Nauka języków online',
+      liveClasses: 'Lekcje na żywo',
+      happyStudents: 'Zadowolonych uczniów'
     },
     courses: {
       title: 'Nasze kursy językowe',
@@ -105,7 +115,17 @@ export const translations = {
       title: 'Вивчайте мови з найкращими вчителями',
       subtitle: 'Відкрийте наші онлайн курси іноземних мов і почніть свою пригоду з новими мовами вже сьогодні',
       cta: 'Переглянути курси',
-      languages: 'Доступні мови'
+      languages: 'Доступні мови',
+      languageNames: {
+        german: 'Німецька',
+        spanish: 'Іспанська',
+        french: 'Французька', 
+        italian: 'Італійська',
+        english: 'Англійська'
+      },
+      imageAlt: 'Вивчення мов онлайн',
+      liveClasses: 'Живі уроки',
+      happyStudents: 'Задоволених студентів'
     },
     courses: {
       title: 'Наші мовні курси',

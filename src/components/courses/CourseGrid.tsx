@@ -1,18 +1,41 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { CourseCard } from './CourseCard';
-import { Course } from '../../types';
 import { useLanguage } from '../../hooks/useLanguage';
+import { apiService } from '../../services/api';
+import { LoadingSpinner } from '../common/LoadingSpinner';
 import { Filter } from 'lucide-react';
 
 interface CourseGridProps {
-  courses: Course[];
+  courses?: any[];
   onEnroll?: (courseId: string) => void;
 }
 
-export const CourseGrid: React.FC<CourseGridProps> = ({ courses, onEnroll }) => {
+export const CourseGrid: React.FC<CourseGridProps> = ({ courses: propCourses, onEnroll }) => {
   const { t } = useLanguage();
+  const [courses, setCourses] = useState<any[]>(propCourses || []);
+  const [loading, setLoading] = useState(!propCourses);
+  const [error, setError] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
+
+  useEffect(() => {
+    if (!propCourses) {
+      fetchCourses();
+    }
+  }, [propCourses]);
+
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getCourses();
+      setCourses(response.courses);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const languages = ['all', 'german', 'spanish', 'french', 'italian', 'english'];
   const levels = ['all', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -32,8 +55,22 @@ export const CourseGrid: React.FC<CourseGridProps> = ({ courses, onEnroll }) => 
     english: 'Angielski'
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
+
       {/* Filters */}
       <div className="bg-white p-6 rounded-xl shadow-sm">
         <div className="flex items-center space-x-2 mb-4">

@@ -1,20 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Plus, Volume2, Edit, Trash2, BookOpen } from 'lucide-react';
-import { mockDictionary } from '../data/mockData';
+import { apiService } from '../services/api';
 import { useLanguage } from '../hooks/useLanguage';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Dictionary: React.FC = () => {
   const { language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
-
-  const filteredWords = mockDictionary.filter(entry => {
-    const matchesSearch = entry.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      entry.translation[language].toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLanguage = selectedLanguage === 'all' || entry.language === selectedLanguage;
-    return matchesSearch && matchesLanguage;
+  const [entries, setEntries] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [newEntry, setNewEntry] = useState({
+    word: '',
+    translation: { pl: '', uk: '' },
+    language: 'german',
+    pronunciation: '',
+    examples: { pl: [''], uk: [''] }
   });
+
+  useEffect(() => {
+    fetchEntries();
+  }, [selectedLanguage, searchTerm]);
+
+  const fetchEntries = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getDictionaryEntries({
+        language: selectedLanguage,
+        search: searchTerm
+      });
+      setEntries(response.entries);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddEntry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await apiService.createDictionaryEntry(newEntry);
+      setShowAddModal(false);
+      setNewEntry({
+        word: '',
+        translation: { pl: '', uk: '' },
+        language: 'german',
+        pronunciation: '',
+        examples: { pl: [''], uk: [''] }
+      });
+      fetchEntries();
+    } catch (err: any) {
+      alert(err.message || 'Błąd podczas dodawania słowa');
+    }
+  };
+
+  const handleDeleteEntry = async (id: string) => {
+    if (confirm('Czy na pewno chcesz usunąć to słowo?')) {
+      try {
+        await apiService.deleteDictionaryEntry(id);
+        fetchEntries();
+      } catch (err: any) {
+        alert(err.message || 'Błąd podczas usuwania słowa');
+      }
+    }
+  };
 
   const languages = [
     { value: 'all', label: 'Wszystkie języki' },
@@ -24,6 +76,14 @@ export const Dictionary: React.FC = () => {
     { value: 'italian', label: 'Włoski' },
     { value: 'english', label: 'Angielski' }
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -35,6 +95,12 @@ export const Dictionary: React.FC = () => {
             Twoje osobiste słownictwo z wszystkich kursów językowych
           </p>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-8">
+            {error}
+          </div>
+        )}
 
         {/* Controls */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
@@ -75,9 +141,9 @@ export const Dictionary: React.FC = () => {
         </div>
 
         {/* Dictionary Grid */}
-        {filteredWords.length > 0 ? (
+        {entries.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredWords.map(entry => (
+            {entries.map(entry => (
               <div key={entry.id} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
@@ -101,7 +167,10 @@ export const Dictionary: React.FC = () => {
                     <button className="text-gray-600 hover:text-gray-800 transition-colors">
                       <Edit className="w-4 h-4" />
                     </button>
-                    <button className="text-red-600 hover:text-red-800 transition-colors">
+                    <button 
+                      onClick={() => handleDeleteEntry(entry.id)}
+                      className="text-red-600 hover:text-red-800 transition-colors"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -161,13 +230,16 @@ export const Dictionary: React.FC = () => {
             <div className="bg-white rounded-xl max-w-md w-full p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Dodaj nowe słowo</h3>
               
-              <form className="space-y-4">
+              <form onSubmit={handleAddEntry} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Słowo w języku obcym
                   </label>
                   <input
                     type="text"
+                    required
+                    value={newEntry.word}
+                    onChange={(e) => setNewEntry({...newEntry, word: e.target.value})}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="np. Hallo"
                   />
@@ -179,6 +251,12 @@ export const Dictionary: React.FC = () => {
                   </label>
                   <input
                     type="text"
+                    required
+                    value={newEntry.translation.pl}
+                    onChange={(e) => setNewEntry({
+                      ...newEntry, 
+                      translation: {...newEntry.translation, pl: e.target.value}
+                    })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="np. Cześć"
                   />
@@ -188,7 +266,11 @@ export const Dictionary: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Język
                   </label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <select 
+                    value={newEntry.language}
+                    onChange={(e) => setNewEntry({...newEntry, language: e.target.value})}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
                     <option value="german">Niemiecki</option>
                     <option value="spanish">Hiszpański</option>
                     <option value="french">Francuski</option>
@@ -203,6 +285,8 @@ export const Dictionary: React.FC = () => {
                   </label>
                   <input
                     type="text"
+                    value={newEntry.pronunciation}
+                    onChange={(e) => setNewEntry({...newEntry, pronunciation: e.target.value})}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="np. /haˈlo/"
                   />
@@ -214,6 +298,14 @@ export const Dictionary: React.FC = () => {
                   </label>
                   <input
                     type="text"
+                    value={newEntry.examples.pl[0] || ''}
+                    onChange={(e) => setNewEntry({
+                      ...newEntry, 
+                      examples: {
+                        ...newEntry.examples, 
+                        pl: [e.target.value]
+                      }
+                    })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="np. Hallo, wie geht es dir?"
                   />

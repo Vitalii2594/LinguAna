@@ -1,27 +1,45 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Book, Clock, Trophy, BookOpen, Search, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
-import { mockCourses, mockEnrollments } from '../../data/mockData';
-import { Course, Enrollment } from '../../types';
+import { apiService } from '../../services/api';
+import { LoadingSpinner } from '../common/LoadingSpinner';
 
 export const StudentDashboard: React.FC = () => {
   const { t, language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
+  const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock enrolled courses
-  const enrolledCourses = mockCourses.filter(course => 
-    mockEnrollments.some(enrollment => enrollment.courseId === course.id)
-  );
+  useEffect(() => {
+    fetchEnrollments();
+  }, []);
 
-  const filteredCourses = enrolledCourses.filter(course =>
-    course.title[language].toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const getProgressForCourse = (courseId: string): number => {
-    const enrollment = mockEnrollments.find(e => e.courseId === courseId);
-    return enrollment?.progress || 0;
+  const fetchEnrollments = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getMyEnrollments();
+      setEnrollments(response.enrollments);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const filteredEnrollments = enrollments.filter(enrollment =>
+    enrollment.course.title[language].toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -45,7 +63,7 @@ export const StudentDashboard: React.FC = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Aktywne kursy</p>
-                <p className="text-2xl font-bold text-gray-900">{enrolledCourses.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{enrollments.length}</p>
               </div>
             </div>
           </div>
@@ -95,10 +113,17 @@ export const StudentDashboard: React.FC = () => {
             </div>
           </div>
 
-          {filteredCourses.length > 0 ? (
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-6">
+              {error}
+            </div>
+          )}
+
+          {filteredEnrollments.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCourses.map(course => {
-                const progress = getProgressForCourse(course.id);
+              {filteredEnrollments.map(enrollment => {
+                const course = enrollment.course;
+                const progress = enrollment.progress;
                 return (
                   <div key={course.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                     <img
@@ -113,7 +138,7 @@ export const StudentDashboard: React.FC = () => {
                     
                     <div className="flex items-center mb-3 text-sm text-gray-600">
                       <User className="w-4 h-4 mr-1" />
-                      <span>{course.teacherName}</span>
+                      <span>{course.teacherName || 'Nauczyciel'}</span>
                     </div>
 
                     {/* Progress Bar */}

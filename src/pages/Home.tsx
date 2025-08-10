@@ -1,16 +1,28 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Hero } from '../components/home/Hero';
 import { CourseGrid } from '../components/courses/CourseGrid'; // importujemy CourseGrid
-import { mockCourses } from '../data/mockData';
+import { apiService } from '../services/api';
 import { useLanguage } from '../hooks/useLanguage';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Users, BookOpen, Globe } from 'lucide-react';
 
 export const Home: React.FC = () => {
   const { t } = useLanguage();
+  const [popularCourses, setPopularCourses] = useState<any[]>([]);
   
-  // Pokazujemy tylko popularne kursy
-  const popularCourses = mockCourses.filter(course => course.isPopular).slice(0, 3);
+  useEffect(() => {
+    fetchPopularCourses();
+  }, []);
+
+  const fetchPopularCourses = async () => {
+    try {
+      const response = await apiService.getCourses({ popular: true });
+      setPopularCourses(response.courses.slice(0, 3));
+    } catch (error) {
+      console.error('Failed to fetch popular courses:', error);
+    }
+  };
 
   const features = [
     {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CourseGrid } from '../components/courses/CourseGrid';
-import { mockCourses } from '../data/mockData';
+import { apiService } from '../services/api';
 import { useLanguage } from '../hooks/useLanguage';
 import { useAuth } from '../hooks/useAuth';
 import { PaymentModal } from '../components/payments/PaymentModal';
@@ -17,8 +17,17 @@ export const Courses: React.FC = () => {
       return;
     }
     
-    setSelectedCourseId(courseId);
-    setShowPaymentModal(true);
+    // For now, directly enroll the user
+    enrollInCourse(courseId);
+  };
+
+  const enrollInCourse = async (courseId: string) => {
+    try {
+      await apiService.enrollInCourse(courseId);
+      alert('Pomyślnie zapisano na kurs! Sprawdź swój panel ucznia.');
+    } catch (error: any) {
+      alert(error.message || 'Błąd podczas zapisywania na kurs');
+    }
   };
 
   const handlePaymentSuccess = () => {
@@ -42,7 +51,7 @@ export const Courses: React.FC = () => {
         </div>
 
         {/* Course Grid */}
-        <CourseGrid courses={mockCourses} onEnroll={handleEnroll} />
+        <CourseGrid onEnroll={handleEnroll} />
 
         {/* Payment Modal */}
         {showPaymentModal && selectedCourseId && (

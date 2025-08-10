@@ -1,5 +1,6 @@
 import { useState, useEffect, ReactNode, createContext } from "react";
 import { User } from "../types";
+import { apiService } from "../services/api";
 
 interface AuthContextType {
   user: User | null;
@@ -23,38 +24,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const token = localStorage.getItem("token");
+    if (token) {
+      apiService.setToken(token);
+      // Verify token and get user data
+      apiService.getProfile()
+        .then(response => {
+          setUser(response.user);
+        })
+        .catch(() => {
+          // Token is invalid, clear it
+          apiService.logout();
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      if (!email || !password) throw new Error("Email i hasło są wymagane");
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      let role: "student" | "teacher" | "admin" = "student";
-      if (email.includes("admin")) role = "admin";
-      else if (email.includes("teacher")) role = "teacher";
-
-      const [first, last] = email.split("@")[0].split(".");
-      const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
-        email,
-        firstName: first || "User",
-        lastName: last || "Name",
-        role,
-        createdAt: new Date().toISOString(),
-      };
-
-      setUser(mockUser);
-      localStorage.setItem("user", JSON.stringify(mockUser));
-    } catch {
-      throw new Error("Błąd logowania");
+      const response = await apiService.login({ email, password });
+      setUser(response.user);
+    } catch (error: any) {
+      throw new Error(error.message || "Błąd logowania");
     } finally {
       setIsLoading(false);
     }
@@ -69,32 +65,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     setIsLoading(true);
     try {
-      if (!email || !password || !firstName || !lastName)
-        throw new Error("Wszystkie pola są wymagane");
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
+      const response = await apiService.register({
         email,
+        password,
         firstName,
         lastName,
-        role: role as "student" | "teacher" | "admin",
-        createdAt: new Date().toISOString(),
-      };
-
-      setUser(mockUser);
-      localStorage.setItem("user", JSON.stringify(mockUser));
-    } catch {
-      throw new Error("Błąd rejestracji");
+        role
+      });
+      setUser(response.user);
+    } catch (error: any) {
+      throw new Error(error.message || "Błąd rejestracji");
     } finally {
       setIsLoading(false);
     }
   };
 
   const logout = () => {
+    apiService.logout();
     setUser(null);
-    localStorage.removeItem("user");
   };
 
   return (
