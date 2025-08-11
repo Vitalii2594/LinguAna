@@ -29,31 +29,31 @@ export const Home: React.FC = () => {
   const features = [
     {
       icon: BookOpen,
-      title: 'Profesjonalni nauczyciele',
-      description: 'Nasi doświadczeni nauczyciele poprowadzą Cię przez całą naukę'
+      title: t('features.teachers.title') || 'Profesjonalni nauczyciele',
+      description: t('features.teachers.description') || 'Nasi doświadczeni nauczyciele poprowadzą Cię przez całą naukę'
     },
     {
       icon: Users,
-      title: 'Interaktywne lekcje',
-      description: 'Uczesticz w żywych sesjach online z innymi uczniami'
+      title: t('features.interactive.title') || 'Interaktywne lekcje',
+      description: t('features.interactive.description') || 'Uczesticz w żywych sesjach online z innymi uczniami'
     },
     {
       icon: Globe,
-      title: '5 języków dostępnych',
-      description: 'Niemiecki, hiszpański, francuski, włoski i angielski'
+      title: t('features.languages.title') || '5 języków dostępnych',
+      description: t('features.languages.description') || 'Niemiecki, hiszpański, francuski, włoski i angielski'
     },
     {
       icon: Star,
-      title: 'Certyfikaty ukończenia',
-      description: 'Otrzymaj oficjalny certyfikat po ukończeniu kursu'
+      title: t('features.certificates.title') || 'Certyfikaty ukończenia',
+      description: t('features.certificates.description') || 'Otrzymaj oficjalny certyfikat po ukończeniu kursu'
     }
   ];
 
   const stats = [
-    { number: '500+', label: 'Zadowolonych uczniów' },
-    { number: '15+', label: 'Doświadczonych nauczycieli' },
-    { number: '25+', label: 'Dostępnych kursów' },
-    { number: '98%', label: 'Wskaźnik zadowolenia' }
+    { number: '500+', label: t('stats.students') || 'Zadowolonych uczniów' },
+    { number: '15+', label: t('stats.teachers') || 'Doświadczonych nauczycieli' },
+    { number: '25+', label: t('stats.courses') || 'Dostępnych kursów' },
+    { number: '98%', label: t('stats.satisfaction') || 'Wskaźnik zadowolenia' }
   ];
 
   return (
@@ -65,10 +65,10 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Dlaczego warto wybrać LinguaSchool?
+              {t('features.title') || 'Dlaczego warto wybrać LinguaSchool?'}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Oferujemy nowoczesne metody nauki, doświadczonych nauczycieli i elastyczne godziny dostosowane do Twojego trybu życia
+              {t('features.subtitle') || 'Oferujemy nowoczesne metody nauki, doświadczonych nauczycieli i elastyczne godziny dostosowane do Twojego trybu życia'}
             </p>
           </div>
 
@@ -108,10 +108,10 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Najpopularniejsze kursy
+              {t('popularCourses.title') || 'Najpopularniejsze kursy'}
             </h2>
             <p className="text-xl text-gray-600">
-              Rozpocznij naukę z naszymi najchętniej wybieranymi kursami
+              {t('popularCourses.subtitle') || 'Rozpocznij naukę z naszymi najchętniej wybieranymi kursami'}
             </p>
           </div>
 
@@ -134,23 +134,23 @@ export const Home: React.FC = () => {
       <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Gotowy na rozpoczęcie nauki?
+            {t('cta.title') || 'Gotowy na rozpoczęcie nauki?'}
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Dołącz do tysięcy zadowolonych uczniów i zacznij swoją przygodę z nowymi językami już dziś
+            {t('cta.subtitle') || 'Dołącz do tysięcy zadowolonych uczniów i zacznij swoją przygodę z nowymi językami już dziś'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/register"
               className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 text-lg font-medium rounded-xl hover:bg-gray-100 transition-colors"
             >
-              Zarejestruj się za darmo
+              {t('cta.register') || 'Zarejestruj się za darmo'}
             </Link>
             <Link
               to="/courses"
               className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white text-lg font-medium rounded-xl hover:bg-white hover:text-blue-600 transition-colors"
             >
-              Przeglądaj kursy
+              {t('cta.browse') || 'Przeglądaj kursy'}
             </Link>
           </div>
         </div>

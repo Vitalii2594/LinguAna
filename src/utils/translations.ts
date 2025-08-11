@@ -28,7 +28,7 @@ export const translations = {
     },
     courses: {
       title: 'Nasze kursy językowe',
-      subtitle: 'Wybierz kurs dopasowany do Twojego poziomu',
+      subtitle: 'Wybierz kurs dopasowany do Twojego poziomu i zacznij naukę już dziś',
       popular: 'Popularny',
       price: 'od',
       currency: 'zł',
@@ -129,7 +129,7 @@ export const translations = {
     },
     courses: {
       title: 'Наші мовні курси',
-      subtitle: 'Оберіть курс відповідно до вашого рівня',
+      subtitle: 'Оберіть курс відповідно до вашого рівня та почніть навчання вже сьогодні',
       popular: 'Популярний',
       price: 'від',
       currency: 'грн',
