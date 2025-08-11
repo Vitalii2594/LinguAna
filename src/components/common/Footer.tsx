@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <BookOpen className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold">LinguaSchool</span>
+              <span className="text-xl font-bold">AKW-Lingua</span>
             </div>
             <p className="text-gray-300 mb-4">
               {t('hero.subtitle')}
