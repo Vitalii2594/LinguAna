@@ -32,6 +32,10 @@ class ApiService {
 
       return await response.json();
     } catch (error) {
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        console.error('Backend server is not running. Please start the server with: npm run dev:server');
+        throw new Error('Backend server is not accessible. Please ensure the server is running on port 3001.');
+      }
       console.error('API request failed:', error);
       throw error;
     }

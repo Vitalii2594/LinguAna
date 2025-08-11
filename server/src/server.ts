@@ -3,7 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
-import { testConnection } from './config/database';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -76,22 +75,15 @@ app.use('*', (req, res) => {
 // Start server
 const startServer = async () => {
   try {
-    // Test database connection
-    const dbConnected = await testConnection();
-    if (!dbConnected) {
-      console.error('Failed to connect to database. Exiting...');
-      process.exit(1);
-    }
-
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`🔗 API base URL: http://localhost:${PORT}/api`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔗 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
-    process.exit(1);
   }
 };
 

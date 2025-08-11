@@ -21,6 +21,8 @@ export const Home: React.FC = () => {
       setPopularCourses(response.courses.slice(0, 3));
     } catch (error) {
       console.error('Failed to fetch popular courses:', error);
+      // Set empty array on error to prevent UI issues
+      setPopularCourses([]);
     }
   };
 
