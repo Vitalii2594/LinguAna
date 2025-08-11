@@ -71,6 +71,42 @@ export const translations = {
         noCourses: 'Nie masz jeszcze żadnych kursów',
         browseCourses: 'Przeglądaj kursy'
       },
+      features: {
+        title: 'Dlaczego warto wybrać LinguaSchool?',
+        subtitle: 'Oferujemy nowoczesne metody nauki, doświadczonych nauczycieli i elastyczne godziny dostosowane do Twojego trybu życia',
+        teachers: {
+          title: 'Profesjonalni nauczyciele',
+          description: 'Nasi doświadczeni nauczyciele poprowadzą Cię przez całą naukę'
+        },
+        interactive: {
+          title: 'Interaktywne lekcje',
+          description: 'Uczesticz w żywych sesjach online z innymi uczniami'
+        },
+        languages: {
+          title: '5 języków dostępnych',
+          description: 'Niemiecki, hiszpański, francuski, włoski i angielski'
+        },
+        certificates: {
+          title: 'Certyfikaty ukończenia',
+          description: 'Otrzymaj oficjalny certyfikat po ukończeniu kursu'
+        }
+      },
+      stats: {
+        students: 'Zadowolonych uczniów',
+        teachers: 'Doświadczonych nauczycieli',
+        courses: 'Dostępnych kursów',
+        satisfaction: 'Wskaźnik zadowolenia'
+      },
+      popularCourses: {
+        title: 'Najpopularniejsze kursy',
+        subtitle: 'Rozpocznij naukę z naszymi najchętniej wybieranymi kursami'
+      },
+      cta: {
+        title: 'Gotowy na rozpoczęcie nauki?',
+        subtitle: 'Dołącz do tysięcy zadowolonych uczniów i zacznij swoją przygodę z nowymi językami już dziś',
+        register: 'Zarejestruj się za darmo',
+        browse: 'Przeglądaj kursy'
+      },
       teacher: {
         title: 'Panel nauczyciela',
         myCourses: 'Moje kursy',
@@ -171,6 +207,42 @@ export const translations = {
         dictionary: 'Словник',
         noCourses: 'У вас ще немає курсів',
         browseCourses: 'Переглядати курси'
+      },
+      features: {
+        title: 'Чому варто обрати LinguaSchool?',
+        subtitle: 'Ми пропонуємо сучасні методи навчання, досвідчених вчителів та гнучкий графік, адаптований до вашого способу життя',
+        teachers: {
+          title: 'Професійні вчителі',
+          description: 'Наші досвідчені вчителі проведуть вас через весь процес навчання'
+        },
+        interactive: {
+          title: 'Інтерактивні уроки',
+          description: 'Беріть участь у живих онлайн-сесіях з іншими студентами'
+        },
+        languages: {
+          title: '5 доступних мов',
+          description: 'Німецька, іспанська, французька, італійська та англійська'
+        },
+        certificates: {
+          title: 'Сертифікати завершення',
+          description: 'Отримайте офіційний сертифікат після завершення курсу'
+        }
+      },
+      stats: {
+        students: 'Задоволених студентів',
+        teachers: 'Досвідчених вчителів',
+        courses: 'Доступних курсів',
+        satisfaction: 'Показник задоволеності'
+      },
+      popularCourses: {
+        title: 'Найпопулярніші курси',
+        subtitle: 'Почніть навчання з нашими найбільш обираними курсами'
+      },
+      cta: {
+        title: 'Готові почати навчання?',
+        subtitle: 'Приєднуйтесь до тисяч задоволених студентів і почніть свою пригоду з новими мовами вже сьогодні',
+        register: 'Зареєструватися безкоштовно',
+        browse: 'Переглядати курси'
       },
       teacher: {
         title: 'Панель вчителя',
